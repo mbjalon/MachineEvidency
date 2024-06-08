@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="MachineEvidency/MachineEvidency/App.axaml" value="MachineEvidency/MachineEvidency.Browser/MachineEvidency.Browser.csproj" />
+        <entry key="MachineEvidency/MachineEvidency/Views/AddMachineView.axaml" value="MachineEvidency/MachineEvidency.Browser/MachineEvidency.Browser.csproj" />
+        <entry key="MachineEvidency/MachineEvidency/Views/AddMachineWindow.axaml" value="MachineEvidency/MachineEvidency.Desktop/MachineEvidency.Desktop.csproj" />
+        <entry key="MachineEvidency/MachineEvidency/Views/CreateUserDialog.axaml" value="MachineEvidency/MachineEvidency.Browser/MachineEvidency.Browser.csproj" />
+        <entry key="MachineEvidency/MachineEvidency/Views/CreateUserWindow.axaml" value="MachineEvidency/MachineEvidency.Desktop/MachineEvidency.Desktop.csproj" />
+        <entry key="MachineEvidency/MachineEvidency/Views/Error.axaml" value="MachineEvidency/MachineEvidency.Browser/MachineEvidency.Browser.csproj" />
+        <entry key="MachineEvidency/MachineEvidency/Views/ErrorDialog.axaml" value="MachineEvidency/MachineEvidency.Browser/MachineEvidency.Browser.csproj" />
+        <entry key="MachineEvidency/MachineEvidency/Views/ErrorMessageWindow.axaml" value="MachineEvidency/MachineEvidency.Browser/MachineEvidency.Browser.csproj" />
+        <entry key="MachineEvidency/MachineEvidency/Views/ErrorMessageWindow.xaml.axaml" value="MachineEvidency/MachineEvidency.Browser/MachineEvidency.Browser.csproj" />
+        <entry key="MachineEvidency/MachineEvidency/Views/Icons.axaml" value="MachineEvidency/MachineEvidency.Browser/MachineEvidency.Browser.csproj" />
+        <entry key="MachineEvidency/MachineEvidency/Views/LoginView.axaml" value="MachineEvidency/MachineEvidency.Desktop/MachineEvidency.Desktop.csproj" />
+        <entry key="MachineEvidency/MachineEvidency/Views/MainView.axaml" value="MachineEvidency/MachineEvidency.Desktop/MachineEvidency.Desktop.csproj" />
+        <entry key="MachineEvidency/MachineEvidency/Views/MainWindow.axaml" value="MachineEvidency/MachineEvidency.Desktop/MachineEvidency.Desktop.csproj" />
+      </map>
+    </option>
+  </component>
+</project>

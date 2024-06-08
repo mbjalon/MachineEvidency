@@ -1,0 +1,66 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:viewModels="clr-namespace:MachineEvidency.ViewModels"
+        x:Class="MachineEvidency.Views.AddMachineWindow"
+        Title="Registrácia"
+        x:DataType="viewModels:AddMachineViewModel"
+        MaxWidth="300"
+        MinHeight="680"
+        Background="#f0f0f0">
+
+    <DockPanel Margin="20">
+        <StackPanel DockPanel.Dock="Top">
+            <TextBlock Text="Registrácia" HorizontalAlignment="Center" FontSize="26" FontWeight="Medium"
+                       Margin="0 0 0 20"/>
+        </StackPanel>
+
+        <StackPanel>
+            <StackPanel.Resources>
+                <Thickness x:Key="InputFieldPadding">5</Thickness>
+            </StackPanel.Resources>
+            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+                <ComboBox SelectedIndex="{Binding MachineType}" Margin="0 0 0 10"
+                          Padding="{StaticResource InputFieldPadding}"
+                          Background="LightSteelBlue" BorderThickness="2" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center">
+                    <ComboBoxItem Content="Malé stroje/zariadenia" Tag="0" Margin="0 0 0 10" HorizontalAlignment="Center"/>
+                    <ComboBoxItem Content="Veľké stroje/zariadenia" Tag="1" Margin="0 0 0 10" HorizontalAlignment="Center"/>
+                </ComboBox>
+                <TextBox Grid.Row="1" Text="{Binding ID}" Watermark="ID" Margin="0 0 0 10" Padding="{StaticResource InputFieldPadding}"/>
+                <TextBox Grid.Row="2" Text="{Binding Name}" Watermark="Názov" Margin="0 0 0 10" Padding="{StaticResource InputFieldPadding}"/>
+                <CalendarDatePicker Grid.Row="3" SelectedDate="{Binding LastRevisionDate}" Watermark="Dátum revízie" Margin="0 0 0 10"
+                                    HorizontalAlignment="Stretch" Padding="{StaticResource InputFieldPadding}"/>
+                <NumericUpDown Grid.Row="4" Value="{Binding RevisionInterval}" Watermark="Interval revízie" Minimum="1" Margin="0 0 0 10"
+                               Padding="{StaticResource InputFieldPadding}"/>
+                <TextBox Grid.Row="5" Text="{Binding Protocol}" Watermark="Číslo Protokolu" Margin="0 0 0 10"
+                         Padding="{StaticResource InputFieldPadding}"/>
+                <TextBox Grid.Row="6" Text="{Binding Type}" Watermark="Typ" Margin="0 0 0 10" Padding="{StaticResource InputFieldPadding}"/>
+                <TextBox Grid.Row="7" Text="{Binding ManufacturingNumber}" Watermark="Výrobné číslo" Margin="0 0 0 10"
+                         Padding="{StaticResource InputFieldPadding}"/>
+                <TextBox Grid.Row="8" Text="{Binding Manufacturer}" Watermark="Výrobca" Margin="0 0 0 10"
+                         Padding="{StaticResource InputFieldPadding}"/>
+                <TextBox Grid.Row="9" Text="{Binding Location}" Watermark="Lokácia" Margin="0 0 0 10"
+                         Padding="{StaticResource InputFieldPadding}"/>
+                <TextBox Grid.Row="10" Text="{Binding Owner}" Watermark="Vlastník" Margin="0 0 0 10"
+                         Padding="{StaticResource InputFieldPadding}"/>
+                <TextBox Grid.Row="11" Text="{Binding Note}" Watermark="Poznámka" Margin="0 0 0 10"
+                         Padding="{StaticResource InputFieldPadding}"/>
+                
+                <TextBlock Grid.Row="12" Text="{Binding ErrorMessage}"
+                           HorizontalAlignment="Center"
+                           Foreground="IndianRed" FontSize="18" FontWeight="Bold"
+                           Margin="0 20 0 0"/>
+                <TextBlock Grid.Row="12" Text="{Binding SuccessMessage}"
+                           HorizontalAlignment="Center"
+                           Foreground="Green" FontSize="18" FontWeight="Bold"
+                           Margin="0 0 0 10"></TextBlock>
+                <Button Grid.Row="13" Content="SAVE" Background="#146859" Foreground="White"
+                        HorizontalAlignment="Center" HorizontalContentAlignment="Center" 
+                        Width="100" Margin="10"
+                        Command="{Binding AddCommand}" Padding="5">
+                </Button>
+            </Grid>
+        </StackPanel>
+    </DockPanel>
+    
+    
+</Window>

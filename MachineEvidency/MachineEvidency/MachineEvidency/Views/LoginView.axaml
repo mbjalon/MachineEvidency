@@ -1,0 +1,47 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:MachineEvidency.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="MachineEvidency.Views.LoginView"
+        x:DataType="viewModels:LoginViewModel">
+        
+        <DockPanel Margin="10">
+            <TextBlock Text="LOGIN" DockPanel.Dock="Top" HorizontalAlignment="Center"
+                       Margin="0 70 0 20"
+                       FontSize="26" FontWeight="Medium">
+            </TextBlock>
+            
+            <StackPanel DockPanel.Dock="Bottom">
+                <TextBlock Text="{Binding ErrorMessage}"
+                           HorizontalAlignment="Center"
+                           Foreground="IndianRed" FontSize="18"/>
+                <Button Content="PRIHLÁSIŤ SA" Background="DarkGreen"
+                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                        Margin="200 10 200 50" Height="50" FontSize="18"
+                        Width="300" FontWeight="Bold"
+                        Foreground="White"
+                        Command="{Binding LoginCommand}"></Button>
+            </StackPanel>
+            
+            <StackPanel Spacing="10">
+                <TextBox
+                    Padding="10" Margin="150 20 150 0" Height="50" VerticalContentAlignment="Center"
+                    Watermark="Užívateľské meno" AcceptsReturn="False"
+                    FontSize="16" MaxLines="1"
+                    Background="LightSteelBlue"
+                    Text="{Binding Username}">
+
+                </TextBox>
+                <TextBox
+                    Padding="10" Margin="150 20 150 0" Height="50" VerticalContentAlignment="Center"
+                    Watermark="Heslo" AcceptsReturn="False"
+                    FontSize="16" MaxLines="1"
+                    Background="LightSteelBlue"
+                    Text="{Binding Password}" PasswordChar="*"
+                    KeyUp="EnterLogin">
+                </TextBox>
+            </StackPanel>
+        </DockPanel>
+</Window>

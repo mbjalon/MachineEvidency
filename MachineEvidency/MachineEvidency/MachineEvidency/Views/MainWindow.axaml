@@ -1,0 +1,358 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:viewModels="clr-namespace:MachineEvidency.ViewModels"
+        x:Class="MachineEvidency.Views.MainWindow"
+        Title="Evidencia strojov/zariadení"
+        x:DataType="viewModels:MainViewModel"
+        Background="#f0f0f0">
+    
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top">
+            <Menu DockPanel.Dock="Top"
+                  Background="#3085c9">
+                <MenuItem Foreground="White"
+                          Header="EVIDENCIA">
+                    <MenuItem Header="Pridať" Background="#3085c9" Foreground="White"
+                              Click="AddMachine" IsVisible="{Binding IsAdmin}">
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem IsVisible="{Binding IsAdmin}" Click="CreateUser">
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <PathIcon Data="{StaticResource person_add_regular}" Foreground="White"></PathIcon>
+                        </StackPanel>
+                    </MenuItem.Header>
+                </MenuItem>
+                <MenuItem IsVisible="{Binding IsAdmin}" Click="ChooseLocation">
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <PathIcon Data="{StaticResource document_copy_regular}" Foreground="White"></PathIcon>
+                        </StackPanel>
+                    </MenuItem.Header>
+                </MenuItem>
+                <MenuItem >
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <PathIcon Data="{StaticResource sign_out_regular}" Foreground="#d92e2e"></PathIcon>
+                        </StackPanel>
+                    </MenuItem.Header>
+                    <MenuItem Header="Odhlásiť sa" Background="#3085c9" Foreground="Red"
+                              Click="Logout"></MenuItem>
+                </MenuItem>
+            </Menu>
+            <TextBlock Text="{Binding ErrorMessage}"
+                       HorizontalAlignment="Center" 
+                       Foreground="IndianRed" FontSize="18" FontWeight="Bold"/>
+        </StackPanel>
+        
+        <Grid>
+            <TabControl>
+                <TabItem Header="Malé stroje/zariadenia" FontSize="20" FontWeight="Bold">
+                    <TabControl VerticalContentAlignment="Top"
+                                Padding="10">
+                        <TabItem Header="Aktívne" FontSize="15" FontWeight="DemiBold">
+                            <DataGrid ItemsSource="{Binding SmallMachines}"
+                                      CanUserReorderColumns="True"
+                                      CanUserResizeColumns="True"
+                                      CanUserSortColumns="True"
+                                      GridLinesVisibility="All"
+                                      BorderThickness="2" BorderBrush="#2659d1"
+                                      Foreground="#2659d1"
+                                      SelectionMode="Single"
+                                      CellEditEnding="UpdateSmall">
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <SplitButton>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <PathIcon Data="{StaticResource settings_regular}" Foreground="Black"></PathIcon>
+                                                    </StackPanel>
+                                                    <SplitButton.Flyout>
+                                                        <MenuFlyout Placement="Bottom">
+                                                            <MenuItem Header="Vymazať" Click="DeleteSmallMachine_Click" CommandParameter="{Binding ID}"/>
+                                                            <MenuItem Header="Dočasne vyradiť" Click="TempDisableSmall_Click" CommandParameter="{Binding ID}"/>
+                                                            <MenuItem Header="Vyradiť" Click="DisableSmall_Click" CommandParameter="{Binding ID}"/>
+                                                        </MenuFlyout>
+                                                    </SplitButton.Flyout>
+                                                </SplitButton>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn Header="Registračné číslo" FontSize="10" Binding="{Binding ID}"/>
+                                    <DataGridTextColumn Header="Názov" FontSize="10" Binding="{Binding Name}"/>
+                                    <DataGridTextColumn Header="Dátum revízie" FontSize="10" Binding="{Binding LastRevisionDate, Mode=OneWay, StringFormat=d}"/>
+                                    <DataGridTextColumn Header="Interval revízie" FontSize="10" Binding="{Binding RevisionInterval}" />
+                                    <DataGridTemplateColumn Header="Platnosť revízie" IsReadOnly="True">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox BorderThickness="0" FontSize="10" Background="{Binding Color}" 
+                                                         Text="{Binding RevisionValidity, StringFormat=d, Mode=OneWay}" IsReadOnly="True"
+                                                         VerticalAlignment="Center"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn Header="Číslo protokolu" FontSize="10" Binding="{Binding Protocol}" />
+                                    <DataGridTextColumn Header="Typ" FontSize="10" Binding="{Binding Type}" />
+                                    <DataGridTextColumn Header="Výrobné číslo" FontSize="10" Binding="{Binding ManufacturingNumber}" />
+                                    <DataGridTextColumn Header="Výrobca" FontSize="10" Binding="{Binding Manufacturer}" />
+                                    <DataGridTextColumn Header="Lokácia" FontSize="10" Binding="{Binding Location}" />
+                                    <DataGridTextColumn Header="Vlastník" FontSize="10" Binding="{Binding Owner}" />
+                                    <DataGridTextColumn Header="Dátum registrácie" FontSize="10" Binding="{Binding RegistrationDate, StringFormat=d}" IsReadOnly="True"/>
+                                    <DataGridTextColumn Header="Poznámka" FontSize="10" Binding="{Binding Note}" />
+                            </DataGrid.Columns>
+                            </DataGrid>
+                        </TabItem>
+                        <TabItem Header="Dočasné vyradené" FontSize="15" FontWeight="DemiBold">
+                            <DataGrid ItemsSource="{Binding TempDisabledSmallMachines}"
+                                      CanUserReorderColumns="True"
+                                      CanUserResizeColumns="True"
+                                      CanUserSortColumns="True"
+                                      GridLinesVisibility="All"
+                                      BorderThickness="2" BorderBrush="#2659d1"
+                                      Foreground="#2659d1"
+                                      SelectionMode="Single"
+                                      CellEditEnding="UpdateSmall">   
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <SplitButton>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <PathIcon Data="{StaticResource settings_regular}" Foreground="Black"></PathIcon>
+                                                </StackPanel>
+                                                <SplitButton.Flyout>
+                                                    <MenuFlyout Placement="Bottom">
+                                                        <MenuItem Header="Vymazať" Click="DeleteSmallMachine_Click" CommandParameter="{Binding ID}"/>
+                                                        <MenuItem Header="Vrátiť späť" Click="BackActiveSmall_Click" CommandParameter="{Binding ID}"/>
+                                                        <MenuItem Header="Vyradiť" Click="DisableSmall_Click" CommandParameter="{Binding ID}"/>
+                                                    </MenuFlyout>
+                                                </SplitButton.Flyout>
+                                            </SplitButton>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                    <DataGridTextColumn Header="Registračné číslo" FontSize="10" Binding="{Binding ID}" />
+                                    <DataGridTextColumn Header="Názov" FontSize="10" Binding="{Binding Name}"/>
+                                    <DataGridTextColumn Header="Dátum revízie" FontSize="10" Binding="{Binding LastRevisionDate, Mode=OneWay, StringFormat=d}"/>
+                                    <DataGridTextColumn Header="Interval revízie" FontSize="10" Binding="{Binding RevisionInterval}" />
+                                    <DataGridTextColumn Header="Číslo protokolu" FontSize="10" Binding="{Binding Protocol}" />
+                                    <DataGridTextColumn Header="Typ" FontSize="10" Binding="{Binding Type}" />
+                                    <DataGridTextColumn Header="Výrobné číslo" FontSize="10" Binding="{Binding ManufacturingNumber}" />
+                                    <DataGridTextColumn Header="Výrobca" FontSize="10" Binding="{Binding Manufacturer}" />
+                                    <DataGridTextColumn Header="Lokácia" FontSize="10" Binding="{Binding Location}" />
+                                    <DataGridTextColumn Header="Vlastník" FontSize="10" Binding="{Binding Owner}" />
+                                    <DataGridTextColumn Header="Dátum registrácie" FontSize="10" Binding="{Binding RegistrationDate, StringFormat=d}" IsReadOnly="True"/>
+                                    <DataGridTextColumn Header="Poznámka" FontSize="10" Binding="{Binding Note}" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </TabItem>
+                        <TabItem Header="Vyradené" FontSize="15" FontWeight="DemiBold">
+                            <DataGrid ItemsSource="{Binding DisabledSmallMachines}"
+                                      CanUserReorderColumns="True"
+                                      CanUserResizeColumns="True"
+                                      CanUserSortColumns="True"
+                                      GridLinesVisibility="All"
+                                      BorderThickness="2" BorderBrush="#2659d1"
+                                      Foreground="#2659d1"
+                                      SelectionMode="Single"
+                                      CellEditEnding="UpdateSmall">
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <SplitButton>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <PathIcon Data="{StaticResource settings_regular}" Foreground="Black"></PathIcon>
+                                                    </StackPanel>
+                                                    <SplitButton.Flyout>
+                                                        <MenuFlyout Placement="Bottom">
+                                                            <MenuItem Header="Vymazať" Click="DeleteSmallMachine_Click" CommandParameter="{Binding ID}"/>
+                                                        </MenuFlyout>
+                                                    </SplitButton.Flyout>
+                                                </SplitButton>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn Header="Registračné číslo" FontSize="10" Binding="{Binding ID}" />
+                                    <DataGridTextColumn Header="Názov" FontSize="10" Binding="{Binding Name}"/>
+                                    <DataGridTextColumn Header="Dátum revízie" FontSize="10" Binding="{Binding LastRevisionDate, Mode=OneWay, StringFormat=d}"/>
+                                    <DataGridTextColumn Header="Interval revízie" FontSize="10" Binding="{Binding RevisionInterval}" />
+                                    <DataGridTextColumn Header="Číslo protokolu" FontSize="10" Binding="{Binding Protocol}" />
+                                    <DataGridTextColumn Header="Typ" FontSize="10" Binding="{Binding Type}" />
+                                    <DataGridTextColumn Header="Výrobné číslo" FontSize="10" Binding="{Binding ManufacturingNumber}" />
+                                    <DataGridTextColumn Header="Výrobca" FontSize="10" Binding="{Binding Manufacturer}" />
+                                    <DataGridTextColumn Header="Lokácia" FontSize="10" Binding="{Binding Location}" />
+                                    <DataGridTextColumn Header="Vlastník" FontSize="10" Binding="{Binding Owner}" />
+                                    <DataGridTextColumn Header="Dátum registrácie" FontSize="10" Binding="{Binding RegistrationDate, StringFormat=d}" IsReadOnly="True"/>
+                                    <DataGridTextColumn Header="Poznámka" FontSize="10" Binding="{Binding Note}" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </TabItem>
+                    </TabControl>
+                </TabItem>
+                
+                
+                
+                <TabItem Header="Veľké stroje/zariadenia" FontSize="20" FontWeight="Bold">
+                    <TabControl VerticalContentAlignment="Top"
+                                Padding="10">
+                        <TabItem Header="Aktívne" FontSize="15" FontWeight="DemiBold">
+                            <DataGrid ItemsSource="{Binding BigMachines}"
+                                      CanUserReorderColumns="True"
+                                      CanUserResizeColumns="True"
+                                      CanUserSortColumns="True"
+                                      GridLinesVisibility="All"
+                                      BorderThickness="2" BorderBrush="#2659d1"
+                                      Foreground="#2659d1"
+                                      SelectionMode="Single"
+                                      CellEditEnding="UpdateBig">
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <SplitButton>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <PathIcon Data="{StaticResource settings_regular}" Foreground="Black"></PathIcon>
+                                                    </StackPanel>
+                                                    <SplitButton.Flyout>
+                                                        <MenuFlyout Placement="Bottom">
+                                                            <MenuItem Header="Vymazať" Click="DeleteBigMachine_Click" CommandParameter="{Binding ID}"/>
+                                                            <MenuItem Header="Dočasne vyradiť" Click="TempDisableBig_Click" CommandParameter="{Binding ID}"/>
+                                                            <MenuItem Header="Vyradiť" Click="DisableBig_Click" CommandParameter="{Binding ID}"/>
+                                                        </MenuFlyout>
+                                                    </SplitButton.Flyout>
+                                                </SplitButton>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn Header="Registračné číslo" FontSize="10" Binding="{Binding ID}" />
+                                    <DataGridTextColumn Header="Názov" FontSize="10" Binding="{Binding Name}"/>
+                                    <DataGridTextColumn Header="Dátum revízie" FontSize="10" Binding="{Binding LastRevisionDate, Mode=OneWay, StringFormat=d}"/>
+                                    <DataGridTextColumn Header="Interval revízie" FontSize="10" Binding="{Binding RevisionInterval}" />
+                                    <DataGridTemplateColumn Header="Platnosť revízie" IsReadOnly="True">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox BorderThickness="0" FontSize="10" Background="{Binding Color}" 
+                                                         Text="{Binding RevisionValidity, StringFormat=d, Mode=OneWay}" IsReadOnly="True"
+                                                         VerticalAlignment="Center"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>                                    <DataGridTextColumn Header="Číslo protokolu" FontSize="10" Binding="{Binding Protocol}" />
+                                    <DataGridTextColumn Header="Typ" FontSize="10" Binding="{Binding Type}" />
+                                    <DataGridTextColumn Header="Výrobné číslo" FontSize="10" Binding="{Binding ManufacturingNumber}" />
+                                    <DataGridTextColumn Header="Výrobca" FontSize="10" Binding="{Binding Manufacturer}" />
+                                    <DataGridTextColumn Header="Lokácia" FontSize="10" Binding="{Binding Location}" />
+                                    <DataGridTextColumn Header="Vlastník" FontSize="10" Binding="{Binding Owner}" />
+                                    <DataGridTextColumn Header="Dátum registrácie" FontSize="10" Binding="{Binding RegistrationDate, StringFormat=d}" IsReadOnly="True"/>
+                                    <DataGridTextColumn Header="Poznámka" FontSize="10" Binding="{Binding Note}" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </TabItem>
+                        <TabItem Header="Dočasné vyradené" FontSize="15" FontWeight="DemiBold">
+                            <DataGrid ItemsSource="{Binding TempDisabledBigMachines}"
+                                      CanUserReorderColumns="True"
+                                      CanUserResizeColumns="True"
+                                      CanUserSortColumns="True"
+                                      GridLinesVisibility="All"
+                                      BorderThickness="2" BorderBrush="#2659d1"
+                                      Foreground="#2659d1"
+                                      SelectionMode="Single"
+                                      CellEditEnding="UpdateBig">
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <SplitButton>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <PathIcon Data="{StaticResource settings_regular}" Foreground="Black"></PathIcon>
+                                                    </StackPanel>
+                                                    <SplitButton.Flyout>
+                                                        <MenuFlyout Placement="Bottom">
+                                                            <MenuItem Header="Vymazať" Click="DeleteBigMachine_Click" CommandParameter="{Binding ID}"/>
+                                                            <MenuItem Header="Vrátiť späť" Click="BackActiveBig_Click" CommandParameter="{Binding ID}"/>
+                                                            <MenuItem Header="Vyradiť" Click="DisableBig_Click" CommandParameter="{Binding ID}"/>
+                                                        </MenuFlyout>
+                                                    </SplitButton.Flyout>
+                                                </SplitButton>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn Header="Registračné číslo" FontSize="10" Binding="{Binding ID}" />
+                                    <DataGridTextColumn Header="Názov" FontSize="10" Binding="{Binding Name}"/>
+                                    <DataGridTextColumn Header="Dátum revízie" FontSize="10" Binding="{Binding LastRevisionDate, Mode=OneWay, StringFormat=d}"/>
+                                    <DataGridTextColumn Header="Interval revízie" FontSize="10" Binding="{Binding RevisionInterval}" />
+                                    <DataGridTextColumn Header="Číslo protokolu" FontSize="10" Binding="{Binding Protocol}" />
+                                    <DataGridTextColumn Header="Typ" FontSize="10" Binding="{Binding Type}" />
+                                    <DataGridTextColumn Header="Výrobné číslo" FontSize="10" Binding="{Binding ManufacturingNumber}" />
+                                    <DataGridTextColumn Header="Výrobca" FontSize="10" Binding="{Binding Manufacturer}" />
+                                    <DataGridTextColumn Header="Lokácia" FontSize="10" Binding="{Binding Location}" />
+                                    <DataGridTextColumn Header="Vlastník" FontSize="10" Binding="{Binding Owner}" />
+                                    <DataGridTextColumn Header="Dátum registrácie" FontSize="10" Binding="{Binding RegistrationDate, StringFormat=d}" IsReadOnly="True"/>
+                                    <DataGridTextColumn Header="Poznámka" FontSize="10" Binding="{Binding Note}" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </TabItem>
+                        <TabItem Header="Vyradené" FontSize="15" FontWeight="DemiBold">
+                            <DataGrid ItemsSource="{Binding DisabledBigMachines}"
+                                      CanUserReorderColumns="True"
+                                      CanUserResizeColumns="True"
+                                      CanUserSortColumns="True"
+                                      GridLinesVisibility="All"
+                                      BorderThickness="2" BorderBrush="#2659d1"
+                                      Foreground="#2659d1"
+                                      SelectionMode="Single"
+                                      CellEditEnding="UpdateBig">
+                                   
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <SplitButton>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <PathIcon Data="{StaticResource settings_regular}" Foreground="Black"></PathIcon>
+                                                    </StackPanel>
+                                                    <SplitButton.Flyout>
+                                                        <MenuFlyout Placement="Bottom">
+                                                            <MenuItem Header="Vymazať" Click="DeleteBigMachine_Click" CommandParameter="{Binding ID}"/>
+                                                        </MenuFlyout>
+                                                    </SplitButton.Flyout>
+                                                </SplitButton>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn Header="Registračné číslo" FontSize="10" Binding="{Binding ID}" />
+                                    <DataGridTextColumn Header="Názov" FontSize="10" Binding="{Binding Name}"/>
+                                    <DataGridTextColumn Header="Dátum revízie" FontSize="10" Binding="{Binding LastRevisionDate, Mode=OneWay, StringFormat=d}"/>
+                                    <DataGridTextColumn Header="Interval revízie" FontSize="10" Binding="{Binding RevisionInterval}" />
+                                    <DataGridTextColumn Header="Číslo protokolu" FontSize="10" Binding="{Binding Protocol}" />
+                                    <DataGridTextColumn Header="Typ" FontSize="10" Binding="{Binding Type}" />
+                                    <DataGridTextColumn Header="Výrobné číslo" FontSize="10" Binding="{Binding ManufacturingNumber}" />
+                                    <DataGridTextColumn Header="Výrobca" FontSize="10" Binding="{Binding Manufacturer}" />
+                                    <DataGridTextColumn Header="Lokácia" FontSize="10" Binding="{Binding Location}" />
+                                    <DataGridTextColumn Header="Vlastník" FontSize="10" Binding="{Binding Owner}" />
+                                    <DataGridTextColumn Header="Dátum registrácie" FontSize="10" Binding="{Binding RegistrationDate, StringFormat=d}" IsReadOnly="True"/>
+                                    <DataGridTextColumn Header="Poznámka" FontSize="10" Binding="{Binding Note}" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </TabItem>
+                    </TabControl>
+                </TabItem>
+            </TabControl>
+            
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="20">
+                <TextBox Watermark="..." VerticalAlignment="Top" Width="200" Margin="0,0,10,0" 
+                         Text="{Binding SearchText, Mode=TwoWay}"/>
+                <Button VerticalAlignment="Top" Width="80" HorizontalContentAlignment="Center"
+                        FontWeight="Bold" Foreground="Black"
+                        Command="{Binding SearchCommand}">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <PathIcon Data="{StaticResource search_regular}" Foreground="Black"></PathIcon>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+            </StackPanel>
+        </Grid>
+    </DockPanel>
+</Window>
